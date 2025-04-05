@@ -4,6 +4,7 @@ import BigNumber from 'bignumber.js'
 
 import { useSwapEstimate } from '@/app/_hooks/useSwapEstimate'
 import { IToken, useTokenList } from '@/app/_hooks/useTokenList'
+import { useWalletProvider } from '@/app/_providers/WalletProvider'
 import { useSwapStore } from '@/app/_state/swap'
 import { Button } from '@/design-system/Button'
 import Typography from '@/design-system/Typography'
@@ -19,6 +20,8 @@ export function SwapInput() {
 		onSelectToken,
 		switchToken,
 		updateInput,
+		inputTarget,
+		setInputTarget
 	} = useSwapStore()
 
 	const { tokens, isFetched } = useTokenList()
@@ -68,11 +71,15 @@ export function SwapInput() {
 		}
 	}, [tokens, isFetched])
 
+	const { setOpenSelectWallet } = useWalletProvider()
+
 	return (
 		<section className="mt-1 flex flex-col gap-1">
 			<div className="relative flex flex-col gap-1">
 				<SwapInputField
-					isInput0={true}
+					target={0}
+					onFocus={setInputTarget}
+					isActive={inputTarget === 0}
 					token={inputToken}
 					value={inputAmount}
 					onInput={handleInput}
@@ -112,7 +119,9 @@ export function SwapInput() {
 				</Button>
 
 				<SwapInputField
-					isInput0={false}
+					target={1}
+					isActive={inputTarget === 1}
+					onFocus={setInputTarget}
 					token={outputToken}
 					value={outputAmount}
 					onInput={handleInput}
@@ -124,6 +133,7 @@ export function SwapInput() {
 				<Button
 					variant="pinkLight"
 					className="h-auto w-full rounded-[20px] px-5 py-3.5"
+					onClick={setOpenSelectWallet}
 				>
 					<Typography size={18} weight="bold" textColor="accent1">
 						지갑 연결

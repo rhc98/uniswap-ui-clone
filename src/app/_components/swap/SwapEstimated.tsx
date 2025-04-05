@@ -67,7 +67,7 @@ export function SwapEstimated() {
 							</Typography>
 						</div>
 
-						<AccordionTrigger />
+						<AccordionTrigger className="transition-transform duration-200 data-[state=open]:rotate-180" />
 					</div>
 
 					<AccordionContent className="mt-2 flex flex-col gap-1.5 px-2">

@@ -1,6 +1,6 @@
-import { useCallback, useMemo } from 'react'
+import { useMemo } from 'react'
 
-import BN, { BigNumber } from 'bignumber.js'
+import { BigNumber } from 'bignumber.js'
 import { ChevronDownIcon } from 'lucide-react'
 
 import { IToken } from '@/app/_hooks/useTokenList'
@@ -11,7 +11,9 @@ import Typography from '@/design-system/Typography'
 
 interface IProps {
 	token?: IToken
-	isInput0: boolean
+	target: number
+	isActive: boolean
+	onFocus: (target: number) => void
 	value: string
 	onInput: (isInput0: boolean, amount: string) => void
 	onSelect: (isInput0: boolean, token: IToken) => void
@@ -19,7 +21,9 @@ interface IProps {
 
 export function SwapInputField({
 	token,
-	isInput0,
+	target,
+	isActive,
+	onFocus,
 	value,
 	onInput,
 	onSelect,
@@ -37,13 +41,14 @@ export function SwapInputField({
 		<div
 			className={cn(
 				'rounded-[20px] border-[1px] border-solid p-4 active:opacity-75',
-				isInput0
-					? 'border-[#22222212] pb-6'
+				target === 0 && 'pb-6',
+				isActive
+					? 'border-[#22222212]'
 					: 'bg-surface2 hover:bg-surface2Hovered border-transparent',
 			)}
 		>
 			<Typography size={16} textColor="neutral2">
-				{isInput0 ? '팔기' : '구매'}
+				{target === 1 ? '팔기' : '구매'}
 			</Typography>
 
 			<div className="flex items-center justify-between py-2.5">
@@ -51,7 +56,8 @@ export function SwapInputField({
 					<Input
 						className="placeholder:text-neutral3 border-none p-0 !text-4xl font-medium shadow-none"
 						value={value}
-						onChange={(e) => onInput(isInput0, e.target.value)}
+						onFocus={() => onFocus(target)}
+						onChange={(e) => onInput(target === 0, e.target.value)}
 					/>
 				</div>
 
@@ -87,7 +93,7 @@ export function SwapInputField({
 							</div>
 						</div>
 					}
-					onSelect={(token: IToken) => onSelect(isInput0, token)}
+					onSelect={(token: IToken) => onSelect(target === 0, token)}
 				/>
 			</div>
 

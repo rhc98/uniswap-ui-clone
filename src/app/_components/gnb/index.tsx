@@ -8,6 +8,7 @@ import { SiteMenu } from '@/app/_components/gnb/SiteMenu'
 import { SiteSetting } from '@/app/_components/gnb/SiteSetting'
 import { WalletOptions } from '@/app/_components/gnb/WalletOptions'
 import { SearchBar } from '@/app/_components/token/SearchBar'
+import { useWalletProvider } from '@/app/_providers/WalletProvider'
 import { Button } from '@/design-system/Button'
 import {
 	NavigationMenu,
@@ -81,6 +82,8 @@ export function GlobalNav() {
 		]
 	}, [])
 
+	const { openSelectWallet, setOpenSelectWallet } = useWalletProvider()
+
 	return (
 		<header className="flex h-[72px] w-full items-center justify-between px-3">
 			<nav className="flex w-full items-center gap-3">
@@ -135,7 +138,7 @@ export function GlobalNav() {
 					</PopoverContent>
 				</Popover>
 
-				<Popover>
+				<Popover open={openSelectWallet} onOpenChange={setOpenSelectWallet}>
 					<PopoverTrigger asChild>
 						<Button variant="pinkLight" rounded={12}>
 							연결

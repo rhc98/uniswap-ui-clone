@@ -1,9 +1,10 @@
 import { Geist, Geist_Mono } from 'next/font/google'
 
-import RootProvider from '@/app/RootProvider'
 import { GlobalNav } from '@/app/_components/gnb'
 
 import type { Metadata } from 'next'
+
+import RootProvider from '@/app/_providers/RootProvider'
 
 import './_style/globals.css'
 
