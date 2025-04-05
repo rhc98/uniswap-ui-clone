@@ -21,7 +21,7 @@ export function SwapInput() {
 		switchToken,
 		updateInput,
 		inputTarget,
-		setInputTarget
+		setInputTarget,
 	} = useSwapStore()
 
 	const { tokens, isFetched } = useTokenList()

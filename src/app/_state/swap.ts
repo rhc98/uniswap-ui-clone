@@ -8,8 +8,8 @@ export interface ISwapStore {
 	inputAmount: string
 	outputToken: IToken
 	outputAmount: string
-  inputTarget: number
-  setInputTarget: (newTarget: number) => void
+	inputTarget: number
+	setInputTarget: (newTarget: number) => void
 	onSelectToken: (isInput0: boolean, token: IToken) => void
 	switchToken: () => void
 	updateInput: (isInput0: boolean, value: string) => void
@@ -26,12 +26,12 @@ export const initialState = {
 	outputAmount: '',
 	slippage: 0.5,
 	deadline: 60,
-  inputTarget: 0
+	inputTarget: 0,
 }
 
 export const useSwapStore = create<ISwapStore>((set, get) => ({
 	...initialState,
-  setInputTarget: (newTarget: number) => set({ inputTarget: newTarget }),
+	setInputTarget: (newTarget: number) => set({ inputTarget: newTarget }),
 	onSelectToken: (isInput0, token) => {
 		set({ [isInput0 ? 'inputToken' : 'outputToken']: token })
 	},

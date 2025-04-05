@@ -1,7 +1,7 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Clock, Search } from 'react-feather'
 
-import { useClickAway } from '@uidotdev/usehooks'
+import { useClickAway, useDebounce } from '@uidotdev/usehooks'
 
 import { TokenRow } from '@/app/_components/token/TokenRow'
 import { IToken, useTokenList } from '@/app/_hooks/useTokenList'
@@ -9,6 +9,25 @@ import { cn } from '@/app/_utils'
 import { Input } from '@/design-system/Input'
 import Typography from '@/design-system/Typography'
 import { PopularTokenIcon } from '@/design-system/icons/PopularToken'
+import { Skeleton } from '@/design-system/Skeleton'
+
+function TokenRowSkeleton() {
+	return (
+		<div className="flex w-full cursor-pointer items-center justify-between px-4 py-2">
+			<div className="flex w-full items-center gap-2">
+				<Skeleton className="h-9 w-9 rounded-full" />
+				<div className="flex flex-col gap-1">
+					<Skeleton className="h-5 w-[100px]" />
+					<Skeleton className="h-5 w-[150px]" />
+				</div>
+			</div>
+			<div className="flex flex-col gap-1">
+				<Skeleton className="h-5 w-[60px]" />
+				<Skeleton className="h-5 w-[60px]" />
+			</div>
+		</div>
+	)
+}
 
 export function SearchBar({
 	place = 'gnb',
@@ -28,10 +47,11 @@ export function SearchBar({
 
 	const { tokens } = useTokenList()
 	const [keyword, setKeyword] = useState<string>('')
+	const debouncedKeyword = useDebounce(keyword, 500)
 
 	const showResult = useMemo(() => {
-		return keyword.length > 2
-	}, [keyword])
+		return debouncedKeyword.length > 2
+	}, [debouncedKeyword])
 	const searchedTokens = useMemo(() => {
 		return tokens.filter((token) => {
 			const searchKeyword = keyword.toLowerCase()
@@ -42,6 +62,18 @@ export function SearchBar({
 			)
 		})
 	}, [tokens, keyword])
+
+	const [isLoading, setIsLoading] = useState(false)
+	useEffect(() => {
+		if (debouncedKeyword.length > 2) {
+			setIsLoading(true)
+			const timer = setTimeout(() => {
+				setIsLoading(false)
+			}, 500)
+
+			return () => clearTimeout(timer)
+		}
+	}, [debouncedKeyword])
 
 	return (
 		<section
@@ -94,7 +126,12 @@ export function SearchBar({
 							'rounded-br-[20px] rounded-bl-[20px] border-[1px] border-t-0 border-solid border-[#22222212] bg-white',
 					)}
 				>
-					{showResult ? (
+					{isLoading ? (
+						<div className="flex flex-col gap-3">
+							<TokenRowSkeleton />
+							<TokenRowSkeleton />
+						</div>
+					) : showResult ? (
 						<div>
 							{searchedTokens.map((token) => {
 								return (
